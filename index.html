@@ -388,7 +388,7 @@
 
             <div class="form-group">
                 <label>
-                    <input type="checkbox" id="freeCenter"> 
+                    <input type="checkbox" id="freeCenter">
                     Freies Feld in der Mitte
                 </label>
             </div>
@@ -486,7 +486,12 @@
 
         function generateSingleCard(items, gridSize, freeCenter) {
             const card = [];
-            const shuffled = [...items].sort(() => Math.random() - 0.5);
+            // Fisher-Yates shuffle for better randomization
+            const shuffled = [...items];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
             const cellCount = gridSize * gridSize;
             const centerIndex = Math.floor(cellCount / 2);
 
@@ -553,8 +558,8 @@
             // Request fullscreen
             const elem = document.getElementById('drawingContainer');
             if (elem.requestFullscreen) {
-                elem.requestFullscreen().catch(err => {
-                    console.log('Fullscreen request failed:', err);
+                elem.requestFullscreen().catch(() => {
+                    // Fullscreen request failed - continue anyway in normal mode
                 });
             }
         }
